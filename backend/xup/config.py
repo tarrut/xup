@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).parent
 
 
 class Settings:
-    SECRET_KEY: str = os.environ.get("SECRET_KEY", "change-this-in-production-xup-secret-key-2024")
+    SECRET_KEY: str = os.environ.get("SECRET_KEY", "")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 1 week
     WS_TICKET_EXPIRE_SECONDS: int = 60
@@ -18,3 +18,6 @@ class Settings:
 
 
 settings = Settings()
+
+if not settings.SECRET_KEY:
+    raise RuntimeError("SECRET_KEY environment variable is not set")

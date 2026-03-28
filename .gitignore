@@ -11,9 +11,3 @@ wheels/
 
 #
 .env
-
-#
-.vscode
-
-#
-.claude

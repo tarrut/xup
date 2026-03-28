@@ -1,0 +1,29 @@
+services:
+  db:
+    ports: !reset []  # don't expose DB port publicly in prod
+
+  backend:
+    environment:
+      CORS_ORIGINS: https://${DOMAIN}
+
+  frontend:
+    ports: !reset []  # caddy takes over, frontend no longer exposed directly
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  caddy_data:
+  caddy_config:

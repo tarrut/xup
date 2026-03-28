@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -20,9 +21,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="XUP", lifespan=lifespan)
 
+_cors_origins = os.environ.get("CORS_ORIGINS", "http://localhost:5173,http://localhost")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost"],
+    allow_origins=[o.strip() for o in _cors_origins.split(",")],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
