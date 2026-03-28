@@ -44,20 +44,18 @@ async def client(db: AsyncSession) -> AsyncClient:
 async def register(client: AsyncClient, username: str, password: str = "password123") -> dict:
     """Register a user and return their auth cookie."""
     r = await client.post(
-        "/register",
+        "/auth/register",
         data={"username": username, "password": password},
-        follow_redirects=False,
     )
-    assert r.status_code == 303, f"Register failed: {r.text}"
+    assert r.status_code == 200, f"Register failed: {r.text}"
     return {"xup_token": r.cookies["xup_token"]}
 
 
 async def login(client: AsyncClient, username: str, password: str = "password123") -> dict:
     """Login and return auth cookie."""
     r = await client.post(
-        "/login",
+        "/auth/login",
         data={"username": username, "password": password},
-        follow_redirects=False,
     )
-    assert r.status_code == 303, f"Login failed: {r.text}"
+    assert r.status_code == 200, f"Login failed: {r.text}"
     return {"xup_token": r.cookies["xup_token"]}

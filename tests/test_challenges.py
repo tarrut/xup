@@ -10,11 +10,11 @@ from tests.conftest import register
 async def _setup_party(client: AsyncClient, db: AsyncSession) -> tuple[str, str, str]:
     """Create alice, create a party, register bob and join. Returns (party_code, alice_id, bob_id)."""
     await register(client, "alice")
-    r = await client.post("/party/create", follow_redirects=False)
-    code = r.headers["location"].split("/lobby/")[1]
+    r = await client.post("/parties")
+    code = r.json()["code"]
 
     await register(client, "bob")
-    await client.post("/party/join", data={"code": code}, follow_redirects=False)
+    await client.post("/parties/join", json={"code": code})
 
     result = await db.execute(select(User).where(User.username == "alice"))
     alice = result.scalar_one()
@@ -28,7 +28,6 @@ async def test_create_challenge(client: AsyncClient, db: AsyncSession):
     code, alice_id, bob_id = await _setup_party(client, db)
 
     # Log back in as alice to create the challenge
-    await register(client, "alice") if False else None
     result = await db.execute(select(User).where(User.username == "alice"))
     alice = result.scalar_one()
     from xup.auth import create_token
