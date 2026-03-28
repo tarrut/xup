@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Create Account – XUP{% endblock %}
+{% block content %}
+<div class="flex-1 flex items-center justify-center px-4 py-12">
+  <div class="w-full max-w-sm">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">XUP</h1>
+      <p class="text-gray-500 text-sm">The party shot game</p>
+    </div>
+
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-2xl">
+      <h2 class="text-lg font-bold mb-5 text-white">Create Account</h2>
+
+      {% if error %}
+      <div class="mb-4 p-3 bg-red-950 border border-red-800 rounded-lg text-red-300 text-sm animate-fade-in">
+        {{ error }}
+      </div>
+      {% endif %}
+
+      <form method="post" action="/register" class="flex flex-col gap-4">
+        <div>
+          <label class="block text-xs text-gray-400 mb-1.5 font-medium uppercase tracking-wide">Username</label>
+          <input
+            type="text" name="username" required autocomplete="username"
+            maxlength="32" placeholder="your_name"
+            class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
+          />
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1.5 font-medium uppercase tracking-wide">Password</label>
+          <input
+            type="password" name="password" required autocomplete="new-password"
+            placeholder="••••••••"
+            class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
+          />
+        </div>
+        <button
+          type="submit"
+          class="mt-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 font-bold text-white text-base active:scale-95 transition-transform shadow-lg shadow-purple-900/30"
+        >
+          Create Account
+        </button>
+      </form>
+
+      <p class="text-center text-gray-500 text-sm mt-5">
+        Already have an account?
+        <a href="/login" class="text-purple-400 hover:text-purple-300 font-medium">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
