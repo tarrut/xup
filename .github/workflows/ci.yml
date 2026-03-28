@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+
+    env:
+      POSTGRES_USER: xup
+      POSTGRES_PASSWORD: ci_password
+      SECRET_KEY: ci-secret-key-not-used-in-production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start services
+        run: |
+          docker compose up -d db backend
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          SECRET_KEY: ${{ env.SECRET_KEY }}
+
+      - name: Wait for backend to be healthy
+        run: |
+          for i in $(seq 1 30); do
+            if docker compose exec -T backend curl -sf http://localhost:8000/docs > /dev/null 2>&1; then
+              echo "Backend is up"
+              break
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 2
+          done
+
+      - name: Run tests
+        run: |
+          docker compose exec -T \
+            -e DATABASE_URL=postgresql+asyncpg://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@db:5432/xup \
+            -e SECRET_KEY=${{ env.SECRET_KEY }} \
+            backend \
+            uv run pytest --tb=short
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          SECRET_KEY: ${{ env.SECRET_KEY }}
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Lint
+        run: npm run lint
+        working-directory: frontend
+
+      - name: Build (includes tsc)
+        run: npm run build
+        working-directory: frontend
