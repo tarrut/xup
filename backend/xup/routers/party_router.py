@@ -63,6 +63,7 @@ async def join_party(
             "type": "member_joined",
             "user_id": current_user.id,
             "username": current_user.username,
+            "is_guest": current_user.is_guest,
         })
 
     return party
@@ -99,6 +100,7 @@ async def get_party(
         MemberResponse(
             id=m.user.id,
             username=m.user.username,
+            is_guest=m.user.is_guest,
             shots_won=m.user.shots_won,
             shots_lost=m.user.shots_lost,
         )

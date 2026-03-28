@@ -1,6 +1,7 @@
 export interface User {
   id: string
   username: string
+  is_guest: boolean
   shots_won: number
   shots_lost: number
 }
@@ -8,6 +9,7 @@ export interface User {
 export interface Member {
   id: string
   username: string
+  is_guest: boolean
   shots_won: number
   shots_lost: number
 }
@@ -31,7 +33,7 @@ export interface Party {
 }
 
 export type WsMessage =
-  | { type: 'member_joined'; user_id: string; username: string }
+  | { type: 'member_joined'; user_id: string; username: string; is_guest: boolean }
   | { type: 'member_offline'; user_id: string; username: string }
   | { type: 'challenge_issued'; challenge_id: string; challenger_id: string; challenger_username: string; target_id: string; target_username: string; shots: number }
   | { type: 'challenge_result'; challenge_id: string; winner_id: string; winner_username: string; loser_id: string; loser_username: string; shots: number }

@@ -1,4 +1,7 @@
-from fastapi import APIRouter, Depends, Form, HTTPException, Response
+import random
+import string
+
+from fastapi import APIRouter, Body, Depends, Form, HTTPException, Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,6 +10,8 @@ from xup.config import settings
 from xup.database import get_db
 from xup.models import User
 from xup.schemas import UserResponse
+
+GUEST_SESSION_SECONDS = 60 * 60 * 24  # 24 hours
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -68,6 +73,41 @@ async def login(
 async def logout(response: Response):
     response.delete_cookie(settings.COOKIE_NAME)
     return {"ok": True}
+
+
+@router.post("/guest", response_model=UserResponse)
+async def guest(
+    response: Response,
+    username: str = Body(..., embed=True),
+    db: AsyncSession = Depends(get_db),
+):
+    username = username.strip()
+    if len(username) < 1 or len(username) > 32:
+        raise HTTPException(status_code=400, detail="Name must be 1–32 characters.")
+
+    # Ensure uniqueness — append random suffix if taken
+    candidate = username
+    for _ in range(10):
+        existing = await db.execute(select(User).where(User.username == candidate))
+        if not existing.scalar_one_or_none():
+            break
+        suffix = "".join(random.choices(string.ascii_lowercase + string.digits, k=4))
+        candidate = f"{username}_{suffix}"
+    else:
+        raise HTTPException(status_code=500, detail="Could not generate a unique guest name.")
+
+    user = User(username=candidate, hashed_password=None, is_guest=True)
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+
+    token = create_token({"sub": user.id, "type": "access"}, expire_seconds=GUEST_SESSION_SECONDS)
+    response.set_cookie(
+        settings.COOKIE_NAME, token,
+        httponly=True, samesite="lax",
+        max_age=GUEST_SESSION_SECONDS,
+    )
+    return user
 
 
 @router.get("/me", response_model=UserResponse)

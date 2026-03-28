@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
+
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { ApiError } from '../api/client'
@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
     const data = new FormData(e.currentTarget)
     setError('')
@@ -57,6 +57,11 @@ export default function LoginPage() {
             No account? <Link to="/register" className="text-purple-400 hover:text-purple-300 font-medium">Create one</Link>
           </p>
         </div>
+
+        <Link to="/guest"
+          className="mt-4 flex items-center justify-center w-full py-3 rounded-xl border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 text-sm font-medium transition-colors">
+          Join as guest
+        </Link>
       </div>
     </div>
   )

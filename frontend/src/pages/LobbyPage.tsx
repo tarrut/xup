@@ -59,7 +59,7 @@ export default function LobbyPage() {
     if (msg.type === 'member_joined') {
       setParty(p => {
         if (!p || p.members.some(m => m.id === msg.user_id)) return p
-        return { ...p, members: [...p.members, { id: msg.user_id, username: msg.username, shots_won: 0, shots_lost: 0 }] }
+        return { ...p, members: [...p.members, { id: msg.user_id, username: msg.username, is_guest: msg.is_guest, shots_won: 0, shots_lost: 0 }] }
       })
       setOnlineIds(s => new Set([...s, msg.user_id]))
       addToast(`${msg.username} joined 🎉`)

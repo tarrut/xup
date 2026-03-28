@@ -5,6 +5,7 @@ class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: str
     username: str
+    is_guest: bool
     shots_won: int
     shots_lost: int
 
@@ -13,6 +14,7 @@ class MemberResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: str
     username: str
+    is_guest: bool
     shots_won: int
     shots_lost: int
 

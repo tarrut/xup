@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import GuestPage from './pages/GuestPage'
 import HomePage from './pages/HomePage'
 import LobbyPage from './pages/LobbyPage'
 
@@ -26,6 +27,7 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<GuestOnly><LoginPage /></GuestOnly>} />
           <Route path="/register" element={<GuestOnly><RegisterPage /></GuestOnly>} />
+          <Route path="/guest" element={<GuestOnly><GuestPage /></GuestOnly>} />
           <Route path="/" element={<RequireAuth><HomePage /></RequireAuth>} />
           <Route path="/lobby/:code" element={<RequireAuth><LobbyPage /></RequireAuth>} />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -2,7 +2,7 @@ import random
 import string
 import uuid
 from datetime import datetime
-from sqlalchemy import String, Integer, DateTime, ForeignKey, UniqueConstraint, func
+from sqlalchemy import Boolean, String, Integer, DateTime, ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from xup.database import Base
 
@@ -18,7 +18,8 @@ class User(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=_uuid)
     username: Mapped[str] = mapped_column(String(32), unique=True, nullable=False, index=True)
-    hashed_password: Mapped[str] = mapped_column(String, nullable=False)
+    hashed_password: Mapped[str | None] = mapped_column(String, nullable=True)
+    is_guest: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     shots_won: Mapped[int] = mapped_column(Integer, default=0)
     shots_lost: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
