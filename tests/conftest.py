@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from xup.config import settings
 from xup.database import Base, get_db
-from xup.main import app
+from xup.main import app, limiter
 
 # Derive test DB URL by replacing the DB name
 TEST_DATABASE_URL = settings.DATABASE_URL.rsplit("/", 1)[0] + "/xup_test"
@@ -33,6 +33,7 @@ async def client(db: AsyncSession) -> AsyncClient:
         yield db
 
     app.dependency_overrides[get_db] = override_get_db
+    limiter.reset()
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
     app.dependency_overrides.clear()

@@ -1,7 +1,9 @@
 import random
 import string
 
-from fastapi import APIRouter, Body, Depends, Form, HTTPException, Response
+from fastapi import APIRouter, Body, Depends, Form, HTTPException, Request, Response
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,13 +13,17 @@ from xup.database import get_db
 from xup.models import User
 from xup.schemas import UserResponse
 
+limiter = Limiter(key_func=get_remote_address)
+
 GUEST_SESSION_SECONDS = 60 * 60 * 24  # 24 hours
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/register", response_model=UserResponse)
+@limiter.limit("10/minute")
 async def register(
+    request: Request,
     response: Response,
     username: str = Form(...),
     password: str = Form(...),
@@ -52,7 +58,9 @@ async def register(
 
 
 @router.post("/login", response_model=UserResponse)
+@limiter.limit("10/minute")
 async def login(
+    request: Request,
     response: Response,
     username: str = Form(...),
     password: str = Form(...),
@@ -80,7 +88,9 @@ async def logout(response: Response):
 
 
 @router.post("/guest", response_model=UserResponse)
+@limiter.limit("10/minute")
 async def guest(
+    request: Request,
     response: Response,
     username: str = Body(..., embed=True),
     db: AsyncSession = Depends(get_db),

@@ -43,7 +43,7 @@ async def test_register_username_too_short(client: AsyncClient):
 async def test_register_password_too_short(client: AsyncClient):
     r = await client.post(
         "/auth/register",
-        data={"username": "alice", "password": "abc"},
+        data={"username": "alice", "password": "short"},  # 5 chars, below 8-char minimum
     )
     assert r.status_code == 400
 
