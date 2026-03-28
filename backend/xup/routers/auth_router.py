@@ -26,8 +26,12 @@ async def register(
     username = username.strip()
     if len(username) < 2 or len(username) > 32:
         raise HTTPException(status_code=400, detail="Username must be 2–32 characters.")
-    if len(password) < 4:
-        raise HTTPException(status_code=400, detail="Password must be at least 4 characters.")
+    if len(password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters.")
+    if len(password) > 128:
+        raise HTTPException(status_code=400, detail="Password must be at most 128 characters.")
+    if password.strip() == "":
+        raise HTTPException(status_code=400, detail="Password cannot be only spaces.")
 
     existing = await db.execute(select(User).where(User.username == username))
     if existing.scalar_one_or_none():
