@@ -26,7 +26,7 @@ app = FastAPI(title="XUP", lifespan=lifespan)
 
 app.mount(
     "/static",
-    StaticFiles(directory=Path(__file__).parent.parent.parent / "static"),
+    StaticFiles(directory=Path(__file__).parents[2] / "static"),
     name="static",
 )
 
