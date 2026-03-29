@@ -10,8 +10,6 @@ export function useWebSocket(
   const reconnectDelay = useRef(1500)
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const onMessageRef = useRef(onMessage)
-  onMessageRef.current = onMessage
-
   const connectRef = useRef<() => Promise<void>>()
 
   const connect = useCallback(async () => {
@@ -27,7 +25,9 @@ export function useWebSocket(
       ws.onmessage = (event) => {
         try {
           onMessageRef.current(JSON.parse(event.data))
-        } catch {}
+        } catch (e) {
+          console.warn('Failed to parse WebSocket message', e)
+        }
       }
 
       ws.onclose = () => {
@@ -45,7 +45,13 @@ export function useWebSocket(
     }
   }, [partyCode])
 
-  connectRef.current = connect
+  useEffect(() => {
+    onMessageRef.current = onMessage
+  })
+
+  useEffect(() => {
+    connectRef.current = connect
+  }, [connect])
 
   useEffect(() => {
     connect()
