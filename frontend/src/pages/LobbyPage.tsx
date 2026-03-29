@@ -107,12 +107,12 @@ export default function LobbyPage() {
   }
 
   async function respondToChallenge(id: string, accept: boolean) {
-    setChallenges(c => c.map(ch => ch.id === id ? { ...ch, _responding: true } as any : ch))
+    setChallenges(c => c.map(ch => ch.id === id ? { ...ch, _responding: true } : ch))
     try {
       await challengesApi.respond(id, accept)
     } catch (err) {
       addToast(err instanceof ApiError ? err.message : 'Failed to respond.', 'error')
-      setChallenges(c => c.map(ch => ch.id === id ? { ...ch, _responding: false } as any : ch))
+      setChallenges(c => c.map(ch => ch.id === id ? { ...ch, _responding: false } : ch))
     }
   }
 

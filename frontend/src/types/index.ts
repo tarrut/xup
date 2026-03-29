@@ -22,6 +22,7 @@ export interface Challenge {
   target_username: string
   shots: number
   status: string
+  _responding?: boolean
 }
 
 export interface Party {

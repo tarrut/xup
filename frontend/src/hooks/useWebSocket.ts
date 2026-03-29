@@ -12,6 +12,8 @@ export function useWebSocket(
   const onMessageRef = useRef(onMessage)
   onMessageRef.current = onMessage
 
+  const connectRef = useRef<() => Promise<void>>()
+
   const connect = useCallback(async () => {
     try {
       const { ticket } = await challengesApi.wsTicket()
@@ -31,7 +33,7 @@ export function useWebSocket(
       ws.onclose = () => {
         reconnectTimer.current = setTimeout(() => {
           reconnectTimer.current = null
-          connect()
+          connectRef.current?.()
         }, reconnectDelay.current)
         reconnectDelay.current = Math.min(reconnectDelay.current * 1.5, 30000)
       }
@@ -39,9 +41,11 @@ export function useWebSocket(
       ws.onerror = () => ws.close()
       wsRef.current = ws
     } catch {
-      reconnectTimer.current = setTimeout(connect, reconnectDelay.current)
+      reconnectTimer.current = setTimeout(() => connectRef.current?.(), reconnectDelay.current)
     }
   }, [partyCode])
+
+  connectRef.current = connect
 
   useEffect(() => {
     connect()
