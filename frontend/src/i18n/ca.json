@@ -1,0 +1,85 @@
+{
+  "brand": "XUP 🎲",
+  "tagline": "El joc de xupets",
+  "loading": "Carregant…",
+  "somethingWentWrong": "Alguna cosa ha anat malament",
+  "logout": "Sortir",
+
+  "login": {
+    "heading": "Inicia sessió",
+    "usernamePlaceholder": "el_teu_nom",
+    "signingIn": "Iniciant sessió…",
+    "submit": "Inicia sessió",
+    "noAccount": "Sense compte?",
+    "createOne": "Crea'n un",
+    "joinAsGuest": "Uneix-te com a convidat"
+  },
+
+  "register": {
+    "heading": "Crea un compte",
+    "usernamePlaceholder": "el_teu_nom",
+    "creating": "Creant compte…",
+    "submit": "Crea el compte",
+    "alreadyHaveAccount": "Ja tens compte?",
+    "signIn": "Inicia sessió"
+  },
+
+  "guest": {
+    "heading": "Uneix-te com a convidat",
+    "description": "Tria un nom que apareixerà a la festa. La teva sessió dura 24 hores.",
+    "displayNameLabel": "Nom visible",
+    "displayNamePlaceholder": "p.ex. Joan",
+    "joining": "Unint-se…",
+    "submit": "Uneix-te com a convidat",
+    "haveAccount": "Tens compte?",
+    "signIn": "Inicia sessió",
+    "register": "Registra't"
+  },
+
+  "home": {
+    "stats": "Les teves estadístiques",
+    "shotsWon": "Xupets guanyats",
+    "shotsLost": "Xupets perduts",
+    "startParty": "Crea una festa",
+    "startPartyDesc": "Crea una nova festa i convida els teus amics.",
+    "createParty": "🎲 Crea una festa",
+    "joinParty": "Uneix-te a una festa",
+    "joinCodePlaceholder": "Introdueix el codi (p.ex. XK4P2Q)",
+    "joinButton": "Uneix-te →"
+  },
+
+  "lobby": {
+    "partyCode": "Codi de festa",
+    "tapToCopy": "Toca per copiar i compartir",
+    "players": "Jugadors",
+    "you": "(tu)",
+    "challenge": "Reptar",
+    "activeChallenges": "Reptes actius",
+    "noActiveChallenges": "Sense reptes actius",
+    "challenged": "va reptar",
+    "youBang": "(tu!)",
+    "accept": "Accepta ✅",
+    "decline": "Rebutja ❌",
+    "challengeModal": "Reptar {{username}}",
+    "numberOfShots": "Nombre de xupets",
+    "shotsOnTheLine": "🥃 xupets en joc",
+    "sendChallenge": "Envia el repte 🎲",
+    "coinFlip": "Cara o Creu",
+    "youWin": "GUANYES! 🎉",
+    "youLose": "PERDS 💀",
+    "winMessage": "{{loser}} beu {{shots}} xupet{{plural}}!",
+    "loseMessage": "Beu {{shots}} xupet{{plural}}. Salut! 🥃",
+    "ok": "OK 🤙",
+    "toastJoined": "{{username}} s'ha unit 🎉",
+    "toastChallenged": "{{challenger}} t'ha reptat per {{shots}} xupet{{plural}}! 🎯",
+    "toastDeclined": "{{decliner}} ha rebutjat el repte.",
+    "toastCopied": "Codi {{code}} copiat! 📋",
+    "toastChallengeFailed": "Error en enviar el repte.",
+    "toastRespondFailed": "Error en respondre."
+  },
+
+  "fields": {
+    "username": "Usuari",
+    "password": "Contrasenya"
+  }
+}

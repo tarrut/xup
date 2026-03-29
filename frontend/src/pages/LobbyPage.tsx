@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
 import { useWebSocket } from '../hooks/useWebSocket'
 import { partiesApi } from '../api/parties'
 import { challengesApi } from '../api/challenges'
 import { ApiError } from '../api/client'
 import type { Party, Challenge, Member, WsMessage } from '../types'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 
 interface Toast {
   id: number
@@ -26,6 +28,7 @@ export default function LobbyPage() {
   const { code } = useParams<{ code: string }>()
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const [party, setParty] = useState<Party | null>(null)
   const [challenges, setChallenges] = useState<Challenge[]>([])
@@ -62,7 +65,7 @@ export default function LobbyPage() {
         return { ...p, members: [...p.members, { id: msg.user_id, username: msg.username, is_guest: msg.is_guest, shots_won: 0, shots_lost: 0 }] }
       })
       setOnlineIds(s => new Set([...s, msg.user_id]))
-      addToast(`${msg.username} joined 🎉`)
+      addToast(t('lobby.toastJoined', { username: msg.username }))
     }
     if (msg.type === 'member_offline') {
       setOnlineIds(s => { const n = new Set(s); n.delete(msg.user_id); return n })
@@ -78,7 +81,7 @@ export default function LobbyPage() {
         status: 'pending',
       }])
       if (msg.target_id === user?.id) {
-        addToast(`${msg.challenger_username} challenged you for ${msg.shots} shot${msg.shots > 1 ? 's' : ''}! 🎯`, 'challenge')
+        addToast(t('lobby.toastChallenged', { challenger: msg.challenger_username, shots: msg.shots, plural: msg.shots > 1 ? 's' : '' }), 'challenge')
       }
     }
     if (msg.type === 'challenge_result') {
@@ -90,9 +93,9 @@ export default function LobbyPage() {
     }
     if (msg.type === 'challenge_declined') {
       setChallenges(c => c.filter(ch => ch.id !== msg.challenge_id))
-      addToast(`${msg.decliner_username} declined the challenge.`)
+      addToast(t('lobby.toastDeclined', { decliner: msg.decliner_username }))
     }
-  }, [user?.id])
+  }, [user?.id, t])
 
   useWebSocket(code!, handleWsMessage)
 
@@ -102,7 +105,7 @@ export default function LobbyPage() {
     try {
       await challengesApi.create(code, modalTarget.id, shotCount)
     } catch (err) {
-      addToast(err instanceof ApiError ? err.message : 'Failed to send challenge.', 'error')
+      addToast(err instanceof ApiError ? err.message : t('lobby.toastChallengeFailed'), 'error')
     }
   }
 
@@ -111,7 +114,7 @@ export default function LobbyPage() {
     try {
       await challengesApi.respond(id, accept)
     } catch (err) {
-      addToast(err instanceof ApiError ? err.message : 'Failed to respond.', 'error')
+      addToast(err instanceof ApiError ? err.message : t('lobby.toastRespondFailed'), 'error')
       setChallenges(c => c.map(ch => ch.id === id ? { ...ch, _responding: false } : ch))
     }
   }
@@ -121,7 +124,7 @@ export default function LobbyPage() {
   function copyCode() {
     if (copied) return
     navigator.clipboard.writeText(code!).then(() => {
-      addToast(`Code ${code} copied! 📋`)
+      addToast(t('lobby.toastCopied', { code }))
       setCopied(true)
       setTimeout(() => setCopied(false), 3500)
     })
@@ -130,7 +133,7 @@ export default function LobbyPage() {
   if (!party) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-gray-500">Loading…</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     )
   }
@@ -141,10 +144,11 @@ export default function LobbyPage() {
     <div className="min-h-screen bg-gray-950 text-white flex flex-col">
       {/* Nav */}
       <nav className="flex items-center justify-between px-4 py-3 border-b border-gray-800 bg-gray-950/80 backdrop-blur sticky top-0 z-10">
-        <span className="text-xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">XUP 🎲</span>
+        <span className="text-xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{t('brand')}</span>
         <div className="flex items-center gap-3">
+          <LanguageSwitcher />
           <span className="text-sm text-gray-400">{user?.username}</span>
-          <button onClick={logout} className="text-xs text-gray-500 hover:text-gray-300 px-2 py-1 rounded border border-gray-700 transition-colors">Logout</button>
+          <button onClick={logout} className="text-xs text-gray-500 hover:text-gray-300 px-2 py-1 rounded border border-gray-700 transition-colors">{t('logout')}</button>
         </div>
       </nav>
 
@@ -152,21 +156,21 @@ export default function LobbyPage() {
         {/* Party code */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex items-center justify-between">
           <div>
-            <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">Party Code</p>
+            <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">{t('lobby.partyCode')}</p>
             <button onClick={copyCode} className="text-3xl font-black font-mono tracking-widest text-white mt-1 active:scale-95 transition-transform">
               {party.code}
             </button>
-            <p className="text-xs text-gray-600 mt-1">Tap to copy &amp; share</p>
+            <p className="text-xs text-gray-600 mt-1">{t('lobby.tapToCopy')}</p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">Players</p>
+            <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">{t('lobby.players')}</p>
             <p className="text-2xl font-black text-purple-400 mt-1">{party.members.length}</p>
           </div>
         </div>
 
         {/* Members */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
-          <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-3">Players</p>
+          <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-3">{t('lobby.players')}</p>
           <div className="flex flex-col gap-2">
             {party.members.map(member => (
               <div key={member.id}
@@ -177,7 +181,7 @@ export default function LobbyPage() {
                   </div>
                   <div>
                     <p className={`font-semibold text-sm ${member.id === user?.id ? 'text-purple-300' : ''}`}>
-                      {member.username}{member.id === user?.id && <span className="text-xs text-gray-500 ml-1">(you)</span>}
+                      {member.username}{member.id === user?.id && <span className="text-xs text-gray-500 ml-1">{t('lobby.you')}</span>}
                     </p>
                     <p className="text-xs text-gray-500">🏆 {member.shots_won}  💀 {member.shots_lost}</p>
                   </div>
@@ -185,7 +189,7 @@ export default function LobbyPage() {
                 {member.id !== user?.id && (
                   <button onClick={() => { setModalTarget(member); setShotCount(1) }}
                     className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-xs font-bold active:scale-95 transition-transform">
-                    CHALLENGE
+                    {t('lobby.challenge').toUpperCase()}
                   </button>
                 )}
               </div>
@@ -195,9 +199,9 @@ export default function LobbyPage() {
 
         {/* Challenges */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
-          <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-3">Active Challenges</p>
+          <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-3">{t('lobby.activeChallenges')}</p>
           {challenges.length === 0
-            ? <p className="text-gray-600 text-sm text-center py-2">No active challenges</p>
+            ? <p className="text-gray-600 text-sm text-center py-2">{t('lobby.noActiveChallenges')}</p>
             : (
               <div className="flex flex-col gap-2">
                 {challenges.map(ch => (
@@ -205,9 +209,9 @@ export default function LobbyPage() {
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-sm">
                         <span className="font-bold text-purple-300">{ch.challenger_username}</span>
-                        <span className="text-gray-500"> challenged </span>
+                        <span className="text-gray-500"> {t('lobby.challenged')} </span>
                         <span className={`font-bold ${ch.target_id === user?.id ? 'text-pink-300' : 'text-white'}`}>
-                          {ch.target_username}{ch.target_id === user?.id && ' (you!)'}
+                          {ch.target_username}{ch.target_id === user?.id && ` ${t('lobby.youBang')}`}
                         </span>
                       </p>
                       <span className="text-amber-400 font-bold text-sm">{ch.shots} 🥃</span>
@@ -216,11 +220,11 @@ export default function LobbyPage() {
                       <div className="flex gap-2 mt-2">
                         <button onClick={() => respondToChallenge(ch.id, true)}
                           className="flex-1 py-2 rounded-lg bg-green-700 hover:bg-green-600 text-sm font-bold active:scale-95 transition-all">
-                          Accept ✅
+                          {t('lobby.accept')}
                         </button>
                         <button onClick={() => respondToChallenge(ch.id, false)}
                           className="flex-1 py-2 rounded-lg bg-red-900 hover:bg-red-800 text-sm font-bold active:scale-95 transition-all">
-                          Decline ❌
+                          {t('lobby.decline')}
                         </button>
                       </div>
                     )}
@@ -238,11 +242,11 @@ export default function LobbyPage() {
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setModalTarget(null)} />
           <div className="relative w-full max-w-lg bg-gray-900 border-t border-gray-700 rounded-t-3xl p-6 animate-slide-up">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-bold">Challenge <span className="text-pink-400">{modalTarget.username}</span></h3>
+              <h3 className="text-lg font-bold">{t('lobby.challengeModal', { username: modalTarget.username })}</h3>
               <button onClick={() => setModalTarget(null)} className="text-gray-500 hover:text-gray-300 text-2xl">×</button>
             </div>
             <div className="mb-6">
-              <label className="block text-xs text-gray-400 mb-3 font-medium uppercase tracking-wide">Number of Shots</label>
+              <label className="block text-xs text-gray-400 mb-3 font-medium uppercase tracking-wide">{t('lobby.numberOfShots')}</label>
               <div className="flex items-center justify-center gap-5">
                 <button onClick={() => setShotCount(s => Math.max(1, s - 1))}
                   className="w-12 h-12 rounded-full bg-gray-700 text-2xl font-bold hover:bg-gray-600 active:scale-95 transition-all flex items-center justify-center">−</button>
@@ -250,11 +254,11 @@ export default function LobbyPage() {
                 <button onClick={() => setShotCount(s => Math.min(10, s + 1))}
                   className="w-12 h-12 rounded-full bg-gray-700 text-2xl font-bold hover:bg-gray-600 active:scale-95 transition-all flex items-center justify-center">+</button>
               </div>
-              <p className="text-center text-gray-500 text-sm mt-2">🥃 shots on the line</p>
+              <p className="text-center text-gray-500 text-sm mt-2">{t('lobby.shotsOnTheLine')}</p>
             </div>
             <button onClick={sendChallenge}
               className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 font-bold text-white text-lg active:scale-95 transition-transform">
-              Send Challenge 🎲
+              {t('lobby.sendChallenge')}
             </button>
           </div>
         </div>
@@ -263,23 +267,23 @@ export default function LobbyPage() {
       {/* Coin flip overlay */}
       {flipVisible && flipResult && (
         <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6">
-          <p className="text-gray-400 text-sm uppercase tracking-widest font-semibold mb-6">Coin Flip</p>
+          <p className="text-gray-400 text-sm uppercase tracking-widest font-semibold mb-6">{t('lobby.coinFlip')}</p>
           <div className={`w-28 h-28 rounded-full flex items-center justify-center text-5xl bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 shadow-[0_0_40px_rgba(234,179,8,0.4)] ${flipAnimating ? 'coin-spin' : ''}`}>
             {flipAnimating ? '🪙' : isWinner ? '🏆' : '💀'}
           </div>
           {!flipAnimating && (
             <div className="mt-8 text-center result-pop">
               <p className={`text-3xl font-black ${isWinner ? 'text-green-400' : 'text-red-400'}`}>
-                {isWinner ? 'YOU WIN! 🎉' : 'YOU LOSE 💀'}
+                {isWinner ? t('lobby.youWin') : t('lobby.youLose')}
               </p>
               <p className="text-gray-400 mt-2">
                 {isWinner
-                  ? `${flipResult.loser_username} drinks ${flipResult.shots} shot${flipResult.shots > 1 ? 's' : ''}!`
-                  : `Drink ${flipResult.shots} shot${flipResult.shots > 1 ? 's' : ''}. Cheers 🥃`}
+                  ? t('lobby.winMessage', { loser: flipResult.loser_username, shots: flipResult.shots, plural: flipResult.shots > 1 ? 's' : '' })
+                  : t('lobby.loseMessage', { shots: flipResult.shots, plural: flipResult.shots > 1 ? 's' : '' })}
               </p>
               <button onClick={() => setFlipVisible(false)}
                 className="mt-6 w-48 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 font-bold text-white text-lg active:scale-95 transition-transform">
-                OK 🤙
+                {t('lobby.ok')}
               </button>
             </div>
           )}

@@ -1,0 +1,85 @@
+{
+  "brand": "XUP 🎲",
+  "tagline": "The party shot game",
+  "loading": "Loading…",
+  "somethingWentWrong": "Something went wrong",
+  "logout": "Logout",
+
+  "login": {
+    "heading": "Sign In",
+    "usernamePlaceholder": "your_name",
+    "signingIn": "Signing in…",
+    "submit": "Sign In",
+    "noAccount": "No account?",
+    "createOne": "Create one",
+    "joinAsGuest": "Join as guest"
+  },
+
+  "register": {
+    "heading": "Create Account",
+    "usernamePlaceholder": "your_name",
+    "creating": "Creating account…",
+    "submit": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in"
+  },
+
+  "guest": {
+    "heading": "Join as Guest",
+    "description": "Pick a name that will appear in the party. Your session lasts 24 hours.",
+    "displayNameLabel": "Display name",
+    "displayNamePlaceholder": "e.g. John",
+    "joining": "Joining…",
+    "submit": "Join as Guest",
+    "haveAccount": "Have an account?",
+    "signIn": "Sign in",
+    "register": "Register"
+  },
+
+  "home": {
+    "stats": "Your Stats",
+    "shotsWon": "Shots Won",
+    "shotsLost": "Shots Lost",
+    "startParty": "Start a Party",
+    "startPartyDesc": "Create a new party and invite your friends.",
+    "createParty": "🎲 Create Party",
+    "joinParty": "Join a Party",
+    "joinCodePlaceholder": "Enter code (e.g. XK4P2Q)",
+    "joinButton": "Join Party →"
+  },
+
+  "lobby": {
+    "partyCode": "Party Code",
+    "tapToCopy": "Tap to copy & share",
+    "players": "Players",
+    "you": "(you)",
+    "challenge": "Challenge",
+    "activeChallenges": "Active Challenges",
+    "noActiveChallenges": "No active challenges",
+    "challenged": "challenged",
+    "youBang": "(you!)",
+    "accept": "Accept ✅",
+    "decline": "Decline ❌",
+    "challengeModal": "Challenge {{username}}",
+    "numberOfShots": "Number of Shots",
+    "shotsOnTheLine": "🥃 shots on the line",
+    "sendChallenge": "Send Challenge 🎲",
+    "coinFlip": "Coin Flip",
+    "youWin": "YOU WIN! 🎉",
+    "youLose": "YOU LOSE 💀",
+    "winMessage": "{{loser}} drinks {{shots}} shot{{plural}}!",
+    "loseMessage": "Drink {{shots}} shot{{plural}}. Cheers 🥃",
+    "ok": "OK 🤙",
+    "toastJoined": "{{username}} joined 🎉",
+    "toastChallenged": "{{challenger}} challenged you for {{shots}} shot{{plural}}! 🎯",
+    "toastDeclined": "{{decliner}} declined the challenge.",
+    "toastCopied": "Code {{code}} copied! 📋",
+    "toastChallengeFailed": "Failed to send challenge.",
+    "toastRespondFailed": "Failed to respond."
+  },
+
+  "fields": {
+    "username": "Username",
+    "password": "Password"
+  }
+}

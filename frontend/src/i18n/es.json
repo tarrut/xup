@@ -1,0 +1,85 @@
+{
+  "brand": "XUP 🎲",
+  "tagline": "El juego de chupitos",
+  "loading": "Cargando…",
+  "somethingWentWrong": "Algo ha ido mal",
+  "logout": "Salir",
+
+  "login": {
+    "heading": "Iniciar sesión",
+    "usernamePlaceholder": "tu_nombre",
+    "signingIn": "Iniciando sesión…",
+    "submit": "Iniciar sesión",
+    "noAccount": "¿Sin cuenta?",
+    "createOne": "Crear una",
+    "joinAsGuest": "Unirse como invitado"
+  },
+
+  "register": {
+    "heading": "Crear cuenta",
+    "usernamePlaceholder": "tu_nombre",
+    "creating": "Creando cuenta…",
+    "submit": "Crear cuenta",
+    "alreadyHaveAccount": "¿Ya tienes cuenta?",
+    "signIn": "Iniciar sesión"
+  },
+
+  "guest": {
+    "heading": "Unirse como invitado",
+    "description": "Elige un nombre que aparecerá en la fiesta. Tu sesión dura 24 horas.",
+    "displayNameLabel": "Nombre visible",
+    "displayNamePlaceholder": "p.ej. Juan",
+    "joining": "Uniéndose…",
+    "submit": "Unirse como invitado",
+    "haveAccount": "¿Tienes cuenta?",
+    "signIn": "Iniciar sesión",
+    "register": "Registrarse"
+  },
+
+  "home": {
+    "stats": "Tus estadísticas",
+    "shotsWon": "Chupitos ganados",
+    "shotsLost": "Chupitos perdidos",
+    "startParty": "Crear fiesta",
+    "startPartyDesc": "Crea una nueva fiesta e invita a tus amigos.",
+    "createParty": "🎲 Crear fiesta",
+    "joinParty": "Unirse a una fiesta",
+    "joinCodePlaceholder": "Introduce el código (p.ej. XK4P2Q)",
+    "joinButton": "Unirse →"
+  },
+
+  "lobby": {
+    "partyCode": "Código de fiesta",
+    "tapToCopy": "Toca para copiar y compartir",
+    "players": "Jugadores",
+    "you": "(tú)",
+    "challenge": "Retar",
+    "activeChallenges": "Retos activos",
+    "noActiveChallenges": "Sin retos activos",
+    "challenged": "retó a",
+    "youBang": "(¡tú!)",
+    "accept": "Aceptar ✅",
+    "decline": "Rechazar ❌",
+    "challengeModal": "Retar a {{username}}",
+    "numberOfShots": "Número de chupitos",
+    "shotsOnTheLine": "🥃 chupitos en juego",
+    "sendChallenge": "Enviar reto 🎲",
+    "coinFlip": "Cara o Cruz",
+    "youWin": "¡GANAS! 🎉",
+    "youLose": "PIERDES 💀",
+    "winMessage": "{{loser}} bebe {{shots}} chupito{{plural}}!",
+    "loseMessage": "Bebe {{shots}} chupito{{plural}}. ¡Salud! 🥃",
+    "ok": "OK 🤙",
+    "toastJoined": "{{username}} se ha unido 🎉",
+    "toastChallenged": "{{challenger}} te retó por {{shots}} chupito{{plural}}! 🎯",
+    "toastDeclined": "{{decliner}} rechazó el reto.",
+    "toastCopied": "Código {{code}} copiado! 📋",
+    "toastChallengeFailed": "Error al enviar el reto.",
+    "toastRespondFailed": "Error al responder."
+  },
+
+  "fields": {
+    "username": "Usuario",
+    "password": "Contraseña"
+  }
+}
