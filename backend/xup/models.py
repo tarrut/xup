@@ -20,6 +20,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(32), unique=True, nullable=False, index=True)
     hashed_password: Mapped[str | None] = mapped_column(String, nullable=True)
     is_guest: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False, server_default="false")
     shots_won: Mapped[int] = mapped_column(Integer, default=0)
     shots_lost: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())

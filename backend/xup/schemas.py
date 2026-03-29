@@ -6,6 +6,7 @@ class UserResponse(BaseModel):
     id: str
     username: str
     is_guest: bool
+    is_admin: bool
     shots_won: int
     shots_lost: int
 

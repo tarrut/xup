@@ -2,6 +2,7 @@ export interface User {
   id: string
   username: string
   is_guest: boolean
+  is_admin: boolean
   shots_won: number
   shots_lost: number
 }

@@ -22,6 +22,8 @@ async def create_party(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Only admins can create parties.")
     from xup.models import _party_code
     for _ in range(5):
         code = _party_code()

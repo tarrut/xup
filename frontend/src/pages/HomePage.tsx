@@ -68,15 +68,15 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Create party */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+        {/* Create party — admin only */}
+        {user?.is_admin && <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
           <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-3">{t('home.startParty')}</p>
           <p className="text-gray-400 text-sm mb-4">{t('home.startPartyDesc')}</p>
           <button onClick={handleCreate} disabled={loading}
             className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 font-bold text-white text-lg active:scale-95 transition-transform disabled:opacity-50">
             {t('home.createParty')}
           </button>
-        </div>
+        </div>}
 
         {/* Join party */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
