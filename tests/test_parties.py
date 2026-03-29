@@ -4,11 +4,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from xup.models import Party, PartyMember
-from tests.conftest import register
+from tests.conftest import register, make_admin
 
 
 async def test_create_party(client: AsyncClient, db: AsyncSession):
     await register(client, "alice")
+    await make_admin(db, "alice")
 
     r = await client.post("/parties")
 
@@ -26,6 +27,7 @@ async def test_create_party(client: AsyncClient, db: AsyncSession):
 
 async def test_create_party_adds_host_as_member(client: AsyncClient, db: AsyncSession):
     await register(client, "alice")
+    await make_admin(db, "alice")
     r = await client.post("/parties")
     code = r.json()["code"]
 
@@ -42,6 +44,7 @@ async def test_create_party_adds_host_as_member(client: AsyncClient, db: AsyncSe
 async def test_join_party(client: AsyncClient, db: AsyncSession):
     # Alice creates party
     await register(client, "alice")
+    await make_admin(db, "alice")
     r = await client.post("/parties")
     code = r.json()["code"]
 
@@ -69,6 +72,7 @@ async def test_join_nonexistent_party(client: AsyncClient):
 async def test_join_party_is_idempotent(client: AsyncClient, db: AsyncSession):
     """Joining a party twice should not create duplicate membership."""
     await register(client, "alice")
+    await make_admin(db, "alice")
     r = await client.post("/parties")
     code = r.json()["code"]
 
@@ -85,6 +89,7 @@ async def test_join_party_is_idempotent(client: AsyncClient, db: AsyncSession):
 
 async def test_get_party_detail(client: AsyncClient, db: AsyncSession):
     await register(client, "alice")
+    await make_admin(db, "alice")
     r = await client.post("/parties")
     code = r.json()["code"]
 
@@ -96,8 +101,9 @@ async def test_get_party_detail(client: AsyncClient, db: AsyncSession):
     assert data["members"][0]["username"] == "alice"
 
 
-async def test_get_party_requires_membership(client: AsyncClient):
+async def test_get_party_requires_membership(client: AsyncClient, db: AsyncSession):
     await register(client, "alice")
+    await make_admin(db, "alice")
     r = await client.post("/parties")
     code = r.json()["code"]
 

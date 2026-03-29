@@ -4,12 +4,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from xup.models import Challenge, Party, PartyMember, User
-from tests.conftest import register
+from tests.conftest import register, make_admin
 
 
 async def _setup_party(client: AsyncClient, db: AsyncSession) -> tuple[str, str, str]:
     """Create alice, create a party, register bob and join. Returns (party_code, alice_id, bob_id)."""
     await register(client, "alice")
+    await make_admin(db, "alice")
     r = await client.post("/parties")
     code = r.json()["code"]
 

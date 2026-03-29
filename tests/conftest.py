@@ -52,6 +52,14 @@ async def register(client: AsyncClient, username: str, password: str = "password
     return {"xup_token": r.cookies["xup_token"]}
 
 
+async def make_admin(db: AsyncSession, username: str) -> None:
+    """Promote a user to admin."""
+    from sqlalchemy import update
+    from xup.models import User
+    await db.execute(update(User).where(User.username == username).values(is_admin=True))
+    await db.commit()
+
+
 async def login(client: AsyncClient, username: str, password: str = "password123") -> dict:
     """Login and return auth cookie."""
     r = await client.post(
