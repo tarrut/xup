@@ -8,6 +8,8 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACR: xupregistry-ehgfatcvcseycqf4.azurecr.io
+  RESOURCE_GROUP: xup_rg
 
 jobs:
   backend:
@@ -82,3 +84,46 @@ jobs:
       - name: Build (includes tsc)
         run: npm run build
         working-directory: frontend
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to ACR
+        run: az acr login --name xupregistry
+
+      - name: Build and push backend
+        run: |
+          docker build -t ${{ env.ACR }}/backend:${{ github.sha }} -t ${{ env.ACR }}/backend:latest -f backend/Dockerfile .
+          docker push ${{ env.ACR }}/backend:${{ github.sha }}
+          docker push ${{ env.ACR }}/backend:latest
+
+      - name: Build and push frontend
+        run: |
+          docker build -t ${{ env.ACR }}/frontend:${{ github.sha }} -t ${{ env.ACR }}/frontend:latest -f frontend/Dockerfile .
+          docker push ${{ env.ACR }}/frontend:${{ github.sha }}
+          docker push ${{ env.ACR }}/frontend:latest
+
+      - name: Deploy backend
+        run: |
+          az containerapp update \
+            --name xup-backend \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image ${{ env.ACR }}/backend:${{ github.sha }}
+
+      - name: Deploy frontend
+        run: |
+          az containerapp update \
+            --name xup-frontend \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image ${{ env.ACR }}/frontend:${{ github.sha }}

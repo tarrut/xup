@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
 import { ApiError } from '../api/client'
@@ -8,7 +8,9 @@ import LanguageSwitcher from '../components/LanguageSwitcher'
 export default function GuestPage() {
   const { loginAsGuest } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const { t } = useTranslation()
+  const from = (location.state as { from?: Location })?.from?.pathname ?? '/'
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -19,7 +21,7 @@ export default function GuestPage() {
     setLoading(true)
     try {
       await loginAsGuest(data.get('guestName') as string)
-      navigate('/')
+      navigate(from, { replace: true })
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t('somethingWentWrong'))
     } finally {

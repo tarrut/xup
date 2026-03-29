@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
 import { ApiError } from '../api/client'
@@ -8,7 +8,9 @@ import LanguageSwitcher from '../components/LanguageSwitcher'
 export default function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const { t } = useTranslation()
+  const from = (location.state as { from?: Location })?.from?.pathname ?? '/'
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -19,7 +21,7 @@ export default function LoginPage() {
     setLoading(true)
     try {
       await login(data.get('username') as string, data.get('password') as string)
-      navigate('/')
+      navigate(from, { replace: true })
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t('somethingWentWrong'))
     } finally {

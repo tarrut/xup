@@ -121,9 +121,14 @@ export default function LobbyPage() {
 
   const [copied, setCopied] = useState(false)
 
-  function copyCode() {
+  function shareParty() {
     if (copied) return
-    navigator.clipboard.writeText(code!).then(() => {
+    const url = `${window.location.origin}/join/${code}`
+    if (navigator.share) {
+      navigator.share({ url }).catch(() => {})
+      return
+    }
+    navigator.clipboard.writeText(url).then(() => {
       addToast(t('lobby.toastCopied', { code }))
       setCopied(true)
       setTimeout(() => setCopied(false), 3500)
@@ -157,7 +162,7 @@ export default function LobbyPage() {
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex items-center justify-between">
           <div>
             <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">{t('lobby.partyCode')}</p>
-            <button onClick={copyCode} className="text-3xl font-black font-mono tracking-widest text-white mt-1 active:scale-95 transition-transform">
+            <button onClick={shareParty} className="text-3xl font-black font-mono tracking-widest text-white mt-1 active:scale-95 transition-transform">
               {party.code}
             </button>
             <p className="text-xs text-gray-600 mt-1">{t('lobby.tapToCopy')}</p>
