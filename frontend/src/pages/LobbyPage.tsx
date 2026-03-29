@@ -197,43 +197,27 @@ export default function LobbyPage() {
           </div>
         </div>
 
-        {/* Challenges */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
-          <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-3">{t('lobby.activeChallenges')}</p>
-          {challenges.length === 0
-            ? <p className="text-gray-600 text-sm text-center py-2">{t('lobby.noActiveChallenges')}</p>
-            : (
-              <div className="flex flex-col gap-2">
-                {challenges.map(ch => (
-                  <div key={ch.id} className="p-3 bg-gray-800 rounded-xl border border-gray-700">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm">
-                        <span className="font-bold text-purple-300">{ch.challenger_username}</span>
-                        <span className="text-gray-500"> {t('lobby.challenged')} </span>
-                        <span className={`font-bold ${ch.target_id === user?.id ? 'text-pink-300' : 'text-white'}`}>
-                          {ch.target_username}{ch.target_id === user?.id && ` ${t('lobby.youBang')}`}
-                        </span>
-                      </p>
-                      <span className="text-amber-400 font-bold text-sm">{ch.shots} 🥃</span>
-                    </div>
-                    {ch.target_id === user?.id && (
-                      <div className="flex gap-2 mt-2">
-                        <button onClick={() => respondToChallenge(ch.id, true)}
-                          className="flex-1 py-2 rounded-lg bg-green-700 hover:bg-green-600 text-sm font-bold active:scale-95 transition-all">
-                          {t('lobby.accept')}
-                        </button>
-                        <button onClick={() => respondToChallenge(ch.id, false)}
-                          className="flex-1 py-2 rounded-lg bg-red-900 hover:bg-red-800 text-sm font-bold active:scale-95 transition-all">
-                          {t('lobby.decline')}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )
-          }
-        </div>
+        {/* Challenges — only show ones targeting the current user */}
+        {challenges.filter(ch => ch.target_id === user?.id).map(ch => (
+          <div key={ch.id} className="bg-gray-900 border border-purple-800 rounded-2xl p-4">
+            <p className="text-sm mb-3">
+              <span className="font-bold text-purple-300">{ch.challenger_username}</span>
+              <span className="text-gray-400"> {t('lobby.challenged')} </span>
+              <span className="font-bold text-pink-300">{t('lobby.youBang')}</span>
+              <span className="text-amber-400 font-bold ml-2">{ch.shots} 🥃</span>
+            </p>
+            <div className="flex gap-2">
+              <button onClick={() => respondToChallenge(ch.id, true)}
+                className="flex-1 py-2 rounded-lg bg-green-700 hover:bg-green-600 text-sm font-bold active:scale-95 transition-all">
+                {t('lobby.accept')}
+              </button>
+              <button onClick={() => respondToChallenge(ch.id, false)}
+                className="flex-1 py-2 rounded-lg bg-red-900 hover:bg-red-800 text-sm font-bold active:scale-95 transition-all">
+                {t('lobby.decline')}
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Challenge modal */}
