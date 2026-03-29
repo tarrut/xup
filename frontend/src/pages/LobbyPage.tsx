@@ -116,8 +116,15 @@ export default function LobbyPage() {
     }
   }
 
+  const [copied, setCopied] = useState(false)
+
   function copyCode() {
-    navigator.clipboard.writeText(code!).then(() => addToast(`Code ${code} copied! 📋`))
+    if (copied) return
+    navigator.clipboard.writeText(code!).then(() => {
+      addToast(`Code ${code} copied! 📋`)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 3500)
+    })
   }
 
   if (!party) {
