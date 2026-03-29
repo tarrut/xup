@@ -10,7 +10,7 @@ export function useWebSocket(
   const reconnectDelay = useRef(1500)
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const onMessageRef = useRef(onMessage)
-  const connectRef = useRef<() => Promise<void>>()
+  const connectRef = useRef<(() => Promise<void>) | undefined>(undefined)
 
   const connect = useCallback(async () => {
     try {
