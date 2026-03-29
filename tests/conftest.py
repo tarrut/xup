@@ -4,7 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from xup.config import settings
 from xup.database import Base, get_db
-from xup.main import app, limiter
+from xup.limiter import limiter
+from xup.main import app
 
 # Derive test DB URL by replacing the DB name
 TEST_DATABASE_URL = settings.DATABASE_URL.rsplit("/", 1)[0] + "/xup_test"

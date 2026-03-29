@@ -2,18 +2,15 @@ import random
 import string
 
 from fastapi import APIRouter, Body, Depends, Form, HTTPException, Request, Response
-from slowapi import Limiter
-from slowapi.util import get_remote_address
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from xup.auth import create_token, get_current_user, hash_password, verify_password
 from xup.config import settings
 from xup.database import get_db
+from xup.limiter import limiter
 from xup.models import User
 from xup.schemas import UserResponse
-
-limiter = Limiter(key_func=get_remote_address)
 
 GUEST_SESSION_SECONDS = 60 * 60 * 24  # 24 hours
 

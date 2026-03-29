@@ -5,16 +5,14 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from typing import Any, cast
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_remote_address
 from sqlalchemy import text
 
 from xup.auth import NotAuthenticatedException
 from xup.database import engine
+from xup.limiter import limiter
 from xup.routers import auth_router, challenge_router, party_router, ws_router
-
-limiter = Limiter(key_func=get_remote_address)
 
 
 @asynccontextmanager
