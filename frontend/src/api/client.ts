@@ -18,6 +18,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     throw new ApiError(res.status, body.detail ?? 'Request failed')
   }
 
+  if (res.status === 204) return null as T
   return res.json()
 }
 
@@ -35,4 +36,5 @@ export const api = {
       body: new URLSearchParams(data),
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     }),
+  delete: <T>(path: string) => request<T>(path, { method: 'DELETE' }),
 }

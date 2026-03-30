@@ -75,7 +75,9 @@
     "toastDeclined": "{{decliner}} ha rebutjat el repte.",
     "toastCopied": "Codi {{code}} copiat! 📋",
     "toastChallengeFailed": "Error en enviar el repte.",
-    "toastRespondFailed": "Error en respondre."
+    "toastRespondFailed": "Error en respondre.",
+    "leaveParty": "Sortir de la festa",
+    "toastLeft": "{{username}} ha abandonat la festa."
   },
 
   "fields": {

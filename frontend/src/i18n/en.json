@@ -75,7 +75,9 @@
     "toastDeclined": "{{decliner}} declined the challenge.",
     "toastCopied": "Code {{code}} copied! 📋",
     "toastChallengeFailed": "Failed to send challenge.",
-    "toastRespondFailed": "Failed to respond."
+    "toastRespondFailed": "Failed to respond.",
+    "leaveParty": "Leave Party",
+    "toastLeft": "{{username}} left the party."
   },
 
   "fields": {

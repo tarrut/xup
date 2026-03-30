@@ -71,6 +71,37 @@ async def join_party(
     return party
 
 
+@router.delete("/{code}/leave", status_code=204)
+async def leave_party(
+    code: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    code = code.upper()
+    result = await db.execute(select(Party).where(Party.code == code))
+    party = result.scalar_one_or_none()
+    if not party:
+        raise HTTPException(status_code=404, detail="Party not found.")
+
+    membership = await db.execute(
+        select(PartyMember).where(
+            PartyMember.party_id == party.id,
+            PartyMember.user_id == current_user.id,
+        )
+    )
+    member = membership.scalar_one_or_none()
+    if not member:
+        raise HTTPException(status_code=404, detail="You are not a member of this party.")
+
+    await db.delete(member)
+    await db.commit()
+    await manager.broadcast(code, {
+        "type": "member_left",
+        "user_id": current_user.id,
+        "username": current_user.username,
+    })
+
+
 @router.get("/{code}", response_model=PartyDetailResponse)
 async def get_party(
     code: str,

@@ -70,6 +70,11 @@ export default function LobbyPage() {
     if (msg.type === 'member_offline') {
       setOnlineIds(s => { const n = new Set(s); n.delete(msg.user_id); return n })
     }
+    if (msg.type === 'member_left') {
+      setParty(p => p ? { ...p, members: p.members.filter(m => m.id !== msg.user_id) } : p)
+      setOnlineIds(s => { const n = new Set(s); n.delete(msg.user_id); return n })
+      addToast(t('lobby.toastLeft', { username: msg.username }))
+    }
     if (msg.type === 'challenge_issued') {
       setChallenges(c => [...c, {
         id: msg.challenge_id,
@@ -98,6 +103,13 @@ export default function LobbyPage() {
   }, [user?.id, t])
 
   useWebSocket(code!, handleWsMessage)
+
+  async function leaveParty() {
+    try {
+      await partiesApi.leave(code!)
+    } catch { /* ignore — leave anyway */ }
+    navigate('/')
+  }
 
   async function sendChallenge() {
     if (!modalTarget || !code) return
@@ -200,6 +212,13 @@ export default function LobbyPage() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Leave party */}
+        <div className="flex justify-center">
+          <button onClick={leaveParty} className="px-5 py-2 rounded-xl border border-red-800 text-red-500 hover:bg-red-950 text-sm font-semibold active:scale-95 transition-all">
+            {t('lobby.leaveParty')}
+          </button>
         </div>
 
         {/* Challenges — only show ones targeting the current user */}
