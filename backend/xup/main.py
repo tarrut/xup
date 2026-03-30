@@ -12,7 +12,7 @@ from sqlalchemy import text
 from xup.auth import NotAuthenticatedException
 from xup.database import engine
 from xup.limiter import limiter
-from xup.routers import auth_router, challenge_router, party_router, ws_router
+from xup.routers import auth_router, challenge_router, party_router, users_router, ws_router
 
 
 @asynccontextmanager
@@ -39,6 +39,7 @@ app.add_middleware(
 app.include_router(auth_router.router)
 app.include_router(party_router.router)
 app.include_router(challenge_router.router)
+app.include_router(users_router.router)
 app.include_router(ws_router.router)
 
 

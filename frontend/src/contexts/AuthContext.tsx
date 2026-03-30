@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { authApi } from '../api/auth'
+import { usersApi } from '../api/users'
 import type { User } from '../types'
 
 interface AuthContextType {
@@ -10,6 +11,7 @@ interface AuthContextType {
   register: (username: string, password: string) => Promise<void>
   loginAsGuest: (username: string) => Promise<void>
   logout: () => Promise<void>
+  updateDisplayName: (name: string) => Promise<void>
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -46,8 +48,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
   }
 
+  const updateDisplayName = async (name: string) => {
+    const u = await usersApi.updateDisplayName(name)
+    setUser(u)
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, loginAsGuest, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, loginAsGuest, logout, updateDisplayName }}>
       {children}
     </AuthContext.Provider>
   )

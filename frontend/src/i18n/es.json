@@ -4,6 +4,7 @@
   "loading": "Cargando…",
   "somethingWentWrong": "Algo ha ido mal",
   "logout": "Salir",
+  "back": "Volver",
 
   "login": {
     "heading": "Iniciar sesión",
@@ -78,6 +79,18 @@
     "toastRespondFailed": "Error al responder.",
     "leaveParty": "Salir de la fiesta",
     "toastLeft": "{{username}} ha abandonado la fiesta."
+  },
+
+  "profile": {
+    "heading": "Perfil",
+    "username": "Usuario",
+    "usernameHint": "Usado para iniciar sesión — no se puede cambiar.",
+    "displayName": "Nombre visible",
+    "displayNameHint": "Mostrado a otros jugadores en las fiestas.",
+    "displayNamePlaceholder": "Tu nombre",
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "saved": "¡Guardado!"
   },
 
   "fields": {

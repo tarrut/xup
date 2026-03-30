@@ -21,7 +21,8 @@ async def websocket_endpoint(
         return
 
     party_code = party_code.upper()
-    await manager.connect(party_code, websocket, user.id, user.username)
+    display = user.display_name or user.username
+    await manager.connect(party_code, websocket, user.id, display)
     try:
         while True:
             await websocket.receive_text()  # Keep alive; client sends pings
@@ -30,5 +31,5 @@ async def websocket_endpoint(
         await manager.broadcast(party_code, {
             "type": "member_offline",
             "user_id": user.id,
-            "username": user.username,
+            "username": display,
         })

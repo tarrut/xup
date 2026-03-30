@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
 import { partiesApi } from '../api/parties'
@@ -45,7 +45,7 @@ export default function HomePage() {
         <span className="text-xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{t('brand')}</span>
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
-          <span className="text-sm text-gray-400">{user?.username}</span>
+          <Link to="/profile" className="text-sm text-gray-400 hover:text-white transition-colors">{user?.display_name ?? user?.username}</Link>
           <button onClick={logout} className="text-xs text-gray-500 hover:text-gray-300 px-2 py-1 rounded border border-gray-700 hover:border-gray-500 transition-colors">
             {t('logout')}
           </button>

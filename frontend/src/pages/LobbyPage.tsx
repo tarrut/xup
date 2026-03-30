@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
 import { useWebSocket } from '../hooks/useWebSocket'
@@ -62,7 +62,7 @@ export default function LobbyPage() {
     if (msg.type === 'member_joined') {
       setParty(p => {
         if (!p || p.members.some(m => m.id === msg.user_id)) return p
-        return { ...p, members: [...p.members, { id: msg.user_id, username: msg.username, is_guest: msg.is_guest, shots_won: 0, shots_lost: 0 }] }
+        return { ...p, members: [...p.members, { id: msg.user_id, username: msg.username, display_name: null, is_guest: msg.is_guest, shots_won: 0, shots_lost: 0 }] }
       })
       setOnlineIds(s => new Set([...s, msg.user_id]))
       addToast(t('lobby.toastJoined', { username: msg.username }))
@@ -170,7 +170,7 @@ export default function LobbyPage() {
         <span className="text-xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{t('brand')}</span>
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
-          <span className="text-sm text-gray-400">{user?.username}</span>
+          <Link to="/profile" className="text-sm text-gray-400 hover:text-white transition-colors">{user?.display_name ?? user?.username}</Link>
           <button onClick={logout} className="text-xs text-gray-500 hover:text-gray-300 px-2 py-1 rounded border border-gray-700 transition-colors">{t('logout')}</button>
         </div>
       </nav>
@@ -208,13 +208,19 @@ export default function LobbyPage() {
                 className={`flex items-center justify-between p-3 bg-gray-800 rounded-xl transition-opacity ${onlineIds.size > 0 && !onlineIds.has(member.id) ? 'opacity-40' : ''}`}>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm font-bold">
-                    {member.username[0].toUpperCase()}
+                    {(member.display_name ?? member.username)[0].toUpperCase()}
                   </div>
                   <div>
                     <p className={`font-semibold text-sm ${member.id === user?.id ? 'text-purple-300' : ''}`}>
-                      {member.username}{member.id === user?.id && <span className="text-xs text-gray-500 ml-1">{t('lobby.you')}</span>}
+                      {member.display_name ?? member.username}{member.id === user?.id && <span className="text-xs text-gray-500 ml-1">{t('lobby.you')}</span>}
                     </p>
-                    <p className="text-xs text-gray-500">🏆 {member.shots_won}  💀 {member.shots_lost}</p>
+                    <p className="text-xs text-gray-500">
+                      {member.is_guest
+                        ? <span className="text-gray-600 italic">guest</span>
+                        : <span className="text-gray-600">@{member.username}</span>
+                      }
+                      {' · '}🏆 {member.shots_won}  💀 {member.shots_lost}
+                    </p>
                   </div>
                 </div>
                 {member.id !== user?.id && (
