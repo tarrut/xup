@@ -31,6 +31,9 @@ export default function GuestPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+      <div className="absolute top-4 left-4">
+        <button onClick={() => navigate(-1)} className="text-gray-500 hover:text-gray-300 text-sm transition-colors">← {t('back')}</button>
+      </div>
       <div className="absolute top-4 right-4"><LanguageSwitcher /></div>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
