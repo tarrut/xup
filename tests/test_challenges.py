@@ -1,9 +1,8 @@
-import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from xup.models import Challenge, Party, PartyMember, User
+from xup.models import Challenge, User
 from tests.conftest import register, make_admin
 
 

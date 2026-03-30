@@ -1,7 +1,6 @@
-import pytest
 from httpx import AsyncClient
 
-from tests.conftest import register, login
+from tests.conftest import register
 
 
 async def test_register_success(client: AsyncClient):
