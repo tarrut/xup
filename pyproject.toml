@@ -30,6 +30,7 @@ dev = "uvicorn xup.main:app --reload --host 0.0.0.0 --port 8000"
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
+    "ruff>=0.15.8",
 ]
 
 [tool.pytest.ini_options]
