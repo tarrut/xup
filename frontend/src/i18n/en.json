@@ -4,6 +4,7 @@
   "loading": "Loading…",
   "somethingWentWrong": "Something went wrong",
   "logout": "Logout",
+  "back": "Back",
 
   "login": {
     "heading": "Sign In",
@@ -78,6 +79,18 @@
     "toastRespondFailed": "Failed to respond.",
     "leaveParty": "Leave Party",
     "toastLeft": "{{username}} left the party."
+  },
+
+  "profile": {
+    "heading": "Profile",
+    "username": "Username",
+    "usernameHint": "Used to log in — cannot be changed.",
+    "displayName": "Display name",
+    "displayNameHint": "Shown to other players in parties.",
+    "displayNamePlaceholder": "Your name",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved!"
   },
 
   "fields": {

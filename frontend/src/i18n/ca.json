@@ -4,6 +4,7 @@
   "loading": "Carregant…",
   "somethingWentWrong": "Alguna cosa ha anat malament",
   "logout": "Sortir",
+  "back": "Enrere",
 
   "login": {
     "heading": "Inicia sessió",
@@ -78,6 +79,18 @@
     "toastRespondFailed": "Error en respondre.",
     "leaveParty": "Sortir de la festa",
     "toastLeft": "{{username}} ha abandonat la festa."
+  },
+
+  "profile": {
+    "heading": "Perfil",
+    "username": "Usuari",
+    "usernameHint": "Usat per iniciar sessió — no es pot canviar.",
+    "displayName": "Nom visible",
+    "displayNameHint": "Es mostra als altres jugadors a les festes.",
+    "displayNamePlaceholder": "El teu nom",
+    "save": "Desa",
+    "saving": "Desant…",
+    "saved": "Desat!"
   },
 
   "fields": {

@@ -1,5 +1,6 @@
-import random
-import string
+import uuid
+
+from sqlalchemy.exc import IntegrityError
 
 from fastapi import APIRouter, Body, Depends, Form, HTTPException, Request, Response
 from sqlalchemy import select
@@ -40,7 +41,7 @@ async def register(
     if existing.scalar_one_or_none():
         raise HTTPException(status_code=400, detail="Username already taken.")
 
-    user = User(username=username, hashed_password=hash_password(password))
+    user = User(username=username, display_name=username, hashed_password=hash_password(password))
     db.add(user)
     await db.commit()
     await db.refresh(user)
@@ -92,25 +93,22 @@ async def guest(
     username: str = Body(..., embed=True),
     db: AsyncSession = Depends(get_db),
 ):
-    username = username.strip()
-    if len(username) < 1 or len(username) > 32:
+    display_name = username.strip()
+    if len(display_name) < 1 or len(display_name) > 32:
         raise HTTPException(status_code=400, detail="Name must be 1–32 characters.")
 
-    # Ensure uniqueness — append random suffix if taken
-    candidate = username
-    for _ in range(10):
-        existing = await db.execute(select(User).where(User.username == candidate))
-        if not existing.scalar_one_or_none():
+    for _ in range(5):
+        candidate = f"guest_{uuid.uuid4().hex[:8]}"
+        user = User(username=candidate, display_name=display_name, hashed_password=None, is_guest=True)
+        db.add(user)
+        try:
+            await db.commit()
+            await db.refresh(user)
             break
-        suffix = "".join(random.choices(string.ascii_lowercase + string.digits, k=4))
-        candidate = f"{username}_{suffix}"
+        except IntegrityError:
+            await db.rollback()
     else:
-        raise HTTPException(status_code=500, detail="Could not generate a unique guest name.")
-
-    user = User(username=candidate, hashed_password=None, is_guest=True)
-    db.add(user)
-    await db.commit()
-    await db.refresh(user)
+        raise HTTPException(status_code=500, detail="Could not generate a unique guest username.")
 
     token = create_token({"sub": user.id, "type": "access"}, expire_seconds=GUEST_SESSION_SECONDS)
     response.set_cookie(

@@ -1,6 +1,7 @@
 export interface User {
   id: string
   username: string
+  display_name: string | null
   is_guest: boolean
   is_admin: boolean
   shots_won: number
@@ -10,6 +11,7 @@ export interface User {
 export interface Member {
   id: string
   username: string
+  display_name: string | null
   is_guest: boolean
   shots_won: number
   shots_lost: number

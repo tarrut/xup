@@ -3,6 +3,7 @@
     reverse_proxy /auth/* backend:8000
     reverse_proxy /parties/* backend:8000
     reverse_proxy /challenge/* backend:8000
+    reverse_proxy /users/* backend:8000
     reverse_proxy /ws/* backend:8000
 
     reverse_proxy * frontend:80

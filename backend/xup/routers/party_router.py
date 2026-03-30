@@ -64,7 +64,7 @@ async def join_party(
         await manager.broadcast(code, {
             "type": "member_joined",
             "user_id": current_user.id,
-            "username": current_user.username,
+            "username": current_user.display_name,
             "is_guest": current_user.is_guest,
         })
 
@@ -98,7 +98,7 @@ async def leave_party(
     await manager.broadcast(code, {
         "type": "member_left",
         "user_id": current_user.id,
-        "username": current_user.username,
+        "username": current_user.display_name,
     })
 
 
@@ -133,6 +133,7 @@ async def get_party(
         MemberResponse(
             id=m.user.id,
             username=m.user.username,
+            display_name=m.user.display_name,
             is_guest=m.user.is_guest,
             shots_won=m.user.shots_won,
             shots_lost=m.user.shots_lost,
@@ -144,9 +145,9 @@ async def get_party(
         ChallengeResponse(
             id=ch.id,
             challenger_id=ch.challenger_id,
-            challenger_username=ch.challenger.username,
+            challenger_username=ch.challenger.display_name,
             target_id=ch.target_id,
-            target_username=ch.target.username,
+            target_username=ch.target.display_name,
             shots=ch.shots,
             status=ch.status,
         )

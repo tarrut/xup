@@ -7,6 +7,7 @@ import GuestPage from './pages/GuestPage'
 import HomePage from './pages/HomePage'
 import LobbyPage from './pages/LobbyPage'
 import JoinPage from './pages/JoinPage'
+import ProfilePage from './pages/ProfilePage'
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/" element={<RequireAuth><HomePage /></RequireAuth>} />
           <Route path="/lobby/:code" element={<RequireAuth><LobbyPage /></RequireAuth>} />
           <Route path="/join/:code" element={<RequireAuth><JoinPage /></RequireAuth>} />
+          <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
