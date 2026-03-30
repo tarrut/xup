@@ -133,18 +133,24 @@ export default function LobbyPage() {
 
   const [copied, setCopied] = useState(false)
 
-  function shareParty() {
+  function copyCode() {
     if (copied) return
-    const url = `${window.location.origin}/join/${code}`
-    if (navigator.share) {
-      navigator.share({ url }).catch(() => {})
-      return
-    }
-    navigator.clipboard.writeText(url).then(() => {
+    navigator.clipboard.writeText(code!).then(() => {
       addToast(t('lobby.toastCopied', { code }))
       setCopied(true)
       setTimeout(() => setCopied(false), 3500)
     })
+  }
+
+  function shareParty() {
+    const url = `${window.location.origin}/join/${code}`
+    if (navigator.share) {
+      navigator.share({ url }).catch(() => {})
+    } else {
+      navigator.clipboard.writeText(url).then(() => {
+        addToast(t('lobby.toastCopied', { code }))
+      })
+    }
   }
 
   if (!party) {
@@ -174,9 +180,17 @@ export default function LobbyPage() {
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex items-center justify-between">
           <div>
             <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">{t('lobby.partyCode')}</p>
-            <button onClick={shareParty} className="text-3xl font-black font-mono tracking-widest text-white mt-1 active:scale-95 transition-transform">
-              {party.code}
-            </button>
+            <div className="flex items-center gap-2 mt-1">
+              <button onClick={copyCode} className="text-3xl font-black font-mono tracking-widest text-white active:scale-95 transition-transform">
+                {party.code}
+              </button>
+              <button onClick={shareParty} className="text-gray-500 hover:text-gray-300 transition-colors p-1" title="Share">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+              </button>
+            </div>
             <p className="text-xs text-gray-600 mt-1">{t('lobby.tapToCopy')}</p>
           </div>
           <div className="text-right">
